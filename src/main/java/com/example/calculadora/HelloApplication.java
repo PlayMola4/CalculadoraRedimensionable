@@ -1,12 +1,20 @@
 package com.example.calculadora;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -142,29 +150,83 @@ public class HelloApplication extends Application {
         //Dimensiones estandares de los botones y texto
         resultadoField.setPrefHeight(35);
 
-        addDimensionesButton(btn0, 35, 55);
-        addDimensionesButton(btn1, 35, 55);
-        addDimensionesButton(btn2, 35, 55);
-        addDimensionesButton(btn3, 35, 55);
-        addDimensionesButton(btn4, 35, 55);
-        addDimensionesButton(btn5, 35, 55);
-        addDimensionesButton(btn6, 35, 55);
-        addDimensionesButton(btn7, 35, 55);
-        addDimensionesButton(btn8, 35, 55);
-        addDimensionesButton(btn9, 35, 55);
-        addDimensionesButton(btnSumar, 35, 55);
-        addDimensionesButton(btnRestar, 35, 55);
-        addDimensionesButton(btnMultiplicar, 35, 55);
-        addDimensionesButton(btnDividir, 35, 55);
-        addDimensionesButton(btnIgual, 35, 55);
-        addDimensionesButton(btnBorrar,35, 55);
+        addDimensionesButton(btn0, 100, 100);
+        addDimensionesButton(btn1, 100, 100);
+        addDimensionesButton(btn2, 100, 100);
+        addDimensionesButton(btn3, 100, 100);
+        addDimensionesButton(btn4, 100, 100);
+        addDimensionesButton(btn5, 100, 100);
+        addDimensionesButton(btn6, 100, 100);
+        addDimensionesButton(btn7, 100, 100);
+        addDimensionesButton(btn8, 100, 100);
+        addDimensionesButton(btn9, 100, 100);
+        addDimensionesButton(btnSumar, 100, 100);
+        addDimensionesButton(btnRestar, 100, 100);
+        addDimensionesButton(btnMultiplicar, 100, 100);
+        addDimensionesButton(btnDividir, 100, 100);
+        addDimensionesButton(btnIgual, 100, 100);
+        addDimensionesButton(btnBorrar,100, 100);
 
         //Dimensiones Maximas para los botones
+        addDimensionesMaximasButton(btn0);
+        addDimensionesMaximasButton(btn1);
+        addDimensionesMaximasButton(btn2);
+        addDimensionesMaximasButton(btn3);
+        addDimensionesMaximasButton(btn4);
+        addDimensionesMaximasButton(btn5);
+        addDimensionesMaximasButton(btn6);
+        addDimensionesMaximasButton(btn7);
+        addDimensionesMaximasButton(btn8);
+        addDimensionesMaximasButton(btn9);
+        addDimensionesMaximasButton(btnSumar);
+        addDimensionesMaximasButton(btnRestar);
+        addDimensionesMaximasButton(btnMultiplicar);
+        addDimensionesMaximasButton(btnDividir);
+        addDimensionesMaximasButton(btnIgual);
+        addDimensionesMaximasButton(btnBorrar);
 
+        //Redimensionar los botones para que ocupen toda la pantalla
+        GridPane.setVgrow(resultadoField, Priority.ALWAYS);
+        GridPane.setVgrow(btn7, Priority.ALWAYS);
+        GridPane.setVgrow(btn4, Priority.ALWAYS);
+        GridPane.setVgrow(btn1, Priority.ALWAYS);
+        GridPane.setVgrow(btn5, Priority.ALWAYS);
+        GridPane.setVgrow(btn2, Priority.ALWAYS);
+        GridPane.setVgrow(btn0, Priority.ALWAYS);
+        GridPane.setVgrow(btnBorrar, Priority.ALWAYS);
 
+        GridPane.setHgrow(btn7, Priority.ALWAYS);
+        GridPane.setHgrow(btn8, Priority.ALWAYS);
+        GridPane.setHgrow(btn9, Priority.ALWAYS);
+        GridPane.setHgrow(btn5, Priority.ALWAYS);
+        GridPane.setHgrow(btn2, Priority.ALWAYS);
+        GridPane.setHgrow(btn0, Priority.ALWAYS);
+        GridPane.setHgrow(btnSumar, Priority.ALWAYS);
 
-        Scene scene = new Scene(gridPane, 320, 240);
-        primarystage.setTitle("Hello!");
+        //Eventos para los botones cuando se clican
+
+        gridPane.addEventFilter(MouseEvent.MOUSE_CLICKED, evento ->{
+            if (evento.getTarget() instanceof Button) {
+                String btnAux = ((Button) evento.getTarget()).getText();
+                resultadoField.setText(resultadoField.getText() + btnAux);
+            }
+        });
+
+        Scene scene = new Scene(gridPane, 300, 250);
+
+        scene.rootProperty().addListener(new ChangeListener<Parent>(){
+            @Override public void changed(ObservableValue<? extends Parent> arg0, Parent oldValue, Parent newValue){
+                scene.rootProperty().removeListener(this);
+                scene.setRoot(gridPane);
+                ((Region)newValue).setPrefWidth(initWidth);     //make sure is a Region!
+                ((Region)newValue).setPrefHeight(initHeight);   //make sure is a Region!
+                root.getChildren().clear();
+                root.getChildren().add(newValue);
+                scene.rootProperty().addListener(this);
+            }
+        });
+
+        primarystage.setTitle("Calculadora Redimensionable");
         primarystage.setScene(scene);
         primarystage.show();
     }
