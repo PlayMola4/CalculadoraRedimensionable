@@ -1,22 +1,15 @@
 package com.example.calculadora;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXMLLoader;
+
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class HelloApplication extends Application {
@@ -59,7 +52,7 @@ public class HelloApplication extends Application {
             opera = "";
             num1 = Integer.parseInt(parts[0]);
             num2 = Integer.parseInt(parts[1]);
-            if (num2==0) {
+            if (num2 == 0) {
                 result = "No se puede dividir entre 0";
             } else {
                 resultado = num1 / num2;
@@ -68,6 +61,7 @@ public class HelloApplication extends Application {
         }
         return result;
     }
+
     //Metodo para las dimensiones de los botones
     public void addDimensionesButton(Button btn, int ancho, int alto) {
         btn.setPrefHeight(alto);
@@ -117,7 +111,7 @@ public class HelloApplication extends Application {
 
         //Ordenamos por Filas
         //Fila 0
-        GridPane.setConstraints(resultadoField, 0, 0,5, 1);
+        GridPane.setConstraints(resultadoField, 0, 0, 5, 1);
 
         //Fila 1
         GridPane.setConstraints(btnSumar, 4, 1);
@@ -138,9 +132,9 @@ public class HelloApplication extends Application {
         GridPane.setConstraints(btn1, 1, 3);
 
         //Fila4
-        GridPane.setConstraints(btnBorrar,1, 4);
-        GridPane.setConstraints(btn0,2, 4);
-        GridPane.setConstraints(btnIgual,3, 4);
+        GridPane.setConstraints(btnBorrar, 1, 4);
+        GridPane.setConstraints(btn0, 2, 4);
+        GridPane.setConstraints(btnIgual, 3, 4);
         GridPane.setConstraints(btnDividir, 4, 4);
 
 
@@ -165,7 +159,7 @@ public class HelloApplication extends Application {
         addDimensionesButton(btnMultiplicar, 100, 100);
         addDimensionesButton(btnDividir, 100, 100);
         addDimensionesButton(btnIgual, 100, 100);
-        addDimensionesButton(btnBorrar,100, 100);
+        addDimensionesButton(btnBorrar, 100, 100);
 
         //Dimensiones Maximas para los botones
         addDimensionesMaximasButton(btn0);
@@ -205,30 +199,27 @@ public class HelloApplication extends Application {
 
         //Eventos para los botones cuando se clican
 
-        gridPane.addEventFilter(MouseEvent.MOUSE_CLICKED, evento ->{
+        Scene scene = new Scene(gridPane, 300, 250);
+
+        primarystage.addEventFilter(MouseEvent.MOUSE_CLICKED, evento -> {
             if (evento.getTarget() instanceof Button) {
+                System.out.println("Flitro del STAGE ejecutado");
+            }
+        });
+
+        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, evento -> {
+            if (evento.getTarget() instanceof Button) {
+                System.out.println("Flitro del SCENE ejecutado");
+            }
+        });
+
+        gridPane.addEventFilter(MouseEvent.MOUSE_CLICKED, evento -> {
+            if (evento.getTarget() instanceof Button) {
+                System.out.println("Flitro del GRIDPANE ejecutado");
                 String btnAux = ((Button) evento.getTarget()).getText();
                 resultadoField.setText(resultadoField.getText() + btnAux);
             }
         });
-
-        Scene scene = new Scene(gridPane, 300, 250);
-
-        scene.rootProperty().addListener(new ChangeListener<Parent>(){
-            @Override public void changed(ObservableValue<? extends Parent> arg0, Parent oldValue, Parent newValue){
-                scene.rootProperty().removeListener(this);
-                scene.setRoot(gridPane);
-                ((Region)newValue).setPrefWidth(initWidth);     //make sure is a Region!
-                ((Region)newValue).setPrefHeight(initHeight);   //make sure is a Region!
-                root.getChildren().clear();
-                root.getChildren().add(newValue);
-                scene.rootProperty().addListener(this);
-            }
-        });
-
-        primarystage.setTitle("Calculadora Redimensionable");
-        primarystage.setScene(scene);
-        primarystage.show();
     }
 
     public static void main(String[] args) {
